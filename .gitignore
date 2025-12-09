@@ -1,0 +1,14 @@
+# R and RStudio artifacts
+.Rhistory
+.RData
+.Ruserdata
+.Rproj.user/
+
+# renv generated libraries
+renv/library/
+renv/staging/
+
+# Local data/results (binary or reproducible from scripts)
+data/
+analysis/*/data/
+analysis/*/results/
