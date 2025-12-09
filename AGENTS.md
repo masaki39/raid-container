@@ -15,6 +15,16 @@ analysis/              independent analyses
 data/                  source datasets
 ```
 
+# Preinstalled Packages
+
+The dev container ships with the base R distribution and recommended bundles:
+
+- Base packages: `base`, `stats`, `graphics`, `grDevices`, `utils`, `datasets`, `methods`
+- Recommended packages: `MASS`, `lattice`, `nlme`, `mgcv`, `survival`, `Matrix`, `boot`, `class`, `cluster`, `codetools`, `foreign`, `KernSmooth`, `nnet`, `rpart`, `spatial`, `splines`, `tcltk`
+- Tooling: `parallel`, `tools`, `renv`
+
+Install any additional CRAN/Bioconductor packages as needed within the container and record them via `renv::snapshot()` so the full environment stays reproducible.
+
 # Analysis Guidelines
 
 - Write analyses as `.R` scripts rather than R Markdown.
