@@ -20,3 +20,18 @@ AI-first R analysis workspace powered by Dev Containers. Hand off your analysis 
    - If the prompt does not appear, run `Dev Containers: Rebuild Container` manually.
 3. **Launch your agent** inside the container (`codex`, `claude`, etc.).
 4. **Drop your data in place, hand the request to the agent, and let it drive the workflow end-to-end.**
+
+## System Dependencies
+
+To install additional system packages, add them to `.devcontainer/devcontainer.json` as shown in the example below:
+
+```json
+"features": {
+    "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+        "packages": [
+            "r-cran-kableextra",
+            "libxml2-dev"
+        ]
+    }
+},
+```

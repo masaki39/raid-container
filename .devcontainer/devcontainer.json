@@ -9,7 +9,8 @@
 	"features": {
 		"ghcr.io/rocker-org/devcontainer-features/renv-cache:0": {},
 		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
-		"ghcr.io/jsburckhardt/devcontainer-features/codex:1": {}
+		"ghcr.io/jsburckhardt/devcontainer-features/codex:1": {},
+		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {},
 	}
 
 
