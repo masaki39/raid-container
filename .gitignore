@@ -9,6 +9,7 @@ renv/library/
 renv/staging/
 
 # Local data/results (binary or reproducible from scripts)
-data/
+data/*
 analysis/*/data/
 analysis/*/results/
+!.gitkeep
