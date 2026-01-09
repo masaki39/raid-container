@@ -8,9 +8,9 @@
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
 		"ghcr.io/rocker-org/devcontainer-features/renv-cache:0": {},
-		"ghcr.io/jsburckhardt/devcontainer-features/codex:1": {},
 		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {},
-	}
+		"ghcr.io/jsburckhardt/devcontainer-features/codex:1": {},
+	},
 
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
