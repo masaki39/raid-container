@@ -8,7 +8,6 @@
 	// Features to add to the dev container. More info: https://containers.dev/features.
 	"features": {
 		"ghcr.io/rocker-org/devcontainer-features/renv-cache:0": {},
-		"ghcr.io/anthropics/devcontainer-features/claude-code:1.0": {},
 		"ghcr.io/jsburckhardt/devcontainer-features/codex:1": {},
 		"ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {},
 	}
@@ -18,7 +17,7 @@
 	// "forwardPorts": [],
 
 	// Use 'postCreateCommand' to run commands after the container is created.
-	// "postCreateCommand": "R -q -e 'renv::install()'",
+	"postCreateCommand": "curl -fsSL https://claude.ai/install.sh | bash",
 
 	// Configure tool-specific properties.
 	// "customizations": {},
