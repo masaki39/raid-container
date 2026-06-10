@@ -1,29 +1,44 @@
 # RAID Container (R × AI × Dev Container)
 
-AI-first R analysis workspace powered by Dev Containers. Hand off your analysis to an AI agent while keeping the environment reproducible.
+Reproducible R analysis workspace powered by Dev Containers. An AI agent running on the host drives the container via `docker exec`.
 
 ## What You Need
 
-1. [**VS Code**](https://code.visualstudio.com/) with the Dev Containers extension.
-2. [**Docker Desktop**](https://www.docker.com/products/docker-desktop/)
-3. [**Git**](https://git-scm.com/downloads)
-4. (Optional) [**Codex CLI**](https://developers.openai.com/codex/cli) or [**Claude Code**](https://claude.com/product/claude-code)—pick your favorite co-pilot.
+1. **Dev Containers** — VS Code + Dev Containers extension, or the [`devcontainer` CLI](https://github.com/devcontainers/cli)
+2. **A container runtime** — Docker Desktop, Colima, etc.
+3. **Git**
+4. An AI agent on the host — Claude Code, Codex CLI, etc.
 
-## Launch & Let Agents Work
+## Launch
 
 1. **Clone and open** the repo.
    ```zsh
    git clone https://github.com/masaki39/raid-container
    code raid-container
    ```
-2. **Reopen in Container** when VS Code prompts you; wait for the Rocker image to boot.  
+2. **Reopen in Container** when VS Code prompts you; wait for the Rocker image to boot.
    - If the prompt does not appear, run `Dev Containers: Rebuild Container` manually.
-3. **Launch your agent** inside the container (`codex`, `claude`, etc.).
-4. **Drop your data in place, hand the request to the agent, and let it drive the workflow end-to-end.**
+
+## Agent Workflow
+
+The agent runs **on the host** and communicates with the container via `docker exec`.
+
+```zsh
+# Find the running container name
+docker ps
+
+# Run an R script inside the container
+docker exec -i <container-name> Rscript analysis/analysis1/scripts/main.R
+
+# Run a one-liner
+docker exec -i <container-name> Rscript -e "sessionInfo()"
+```
+
+Drop your data in `data/`, open your agent, and hand off the analysis request.
 
 ## System Dependencies
 
-To install additional system packages, add them to `.devcontainer/devcontainer.json` as shown in the example below:
+To install additional system packages, add them to `.devcontainer/devcontainer.json`:
 
 ```json
 "features": {

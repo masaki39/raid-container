@@ -1,6 +1,24 @@
 # Overview
 
-This repository ships with a Rocker-based dev container so you can run R out of the box.
+This repository ships with a Rocker-based dev container so you can run R out of the box. You (the agent) run on the **host** and drive R inside the container via `docker exec`.
+
+# Docker Exec Usage
+
+Find the running container name, then issue commands against it.
+
+```zsh
+# Find container name
+docker ps --filter "label=devcontainer.local_folder=$(pwd)"
+
+# Run an R script
+docker exec -i <container-name> Rscript analysis/analysis1/scripts/main.R
+
+# Run a one-liner
+docker exec -i <container-name> Rscript -e "cat(R.version\$version.string)"
+
+# Install a package and snapshot
+docker exec -i <container-name> Rscript -e "install.packages('pkg'); renv::snapshot()"
+```
 
 # Repository Layout
 
@@ -23,7 +41,7 @@ The dev container ships with the base R distribution and recommended bundles:
 - Recommended packages: `MASS`, `lattice`, `nlme`, `mgcv`, `survival`, `Matrix`, `boot`, `class`, `cluster`, `codetools`, `foreign`, `KernSmooth`, `nnet`, `rpart`, `spatial`, `splines`, `tcltk`
 - Tooling: `parallel`, `tools`, `renv`
 
-Install any additional CRAN/Bioconductor packages as needed within the container and record them via `renv::snapshot()` so the full environment stays reproducible.
+Install any additional CRAN/Bioconductor packages as needed and record them via `renv::snapshot()`.
 
 # Analysis Guidelines
 
