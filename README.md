@@ -19,6 +19,16 @@ Reproducible R analysis workspace powered by Dev Containers. An AI agent running
 2. **Reopen in Container** when VS Code prompts you; wait for the Rocker image to boot.
    - If the prompt does not appear, run `Dev Containers: Rebuild Container` manually.
 
+### Without VS Code (e.g. macOS + Colima)
+
+```zsh
+colima start                          # start the Docker daemon
+devcontainer up --workspace-folder .  # build / start the container
+```
+
+Then restore packages once: `docker exec -w /workspaces/<repo-name> <containerId> Rscript -e 'renv::restore(prompt = FALSE)'`.
+See `AGENTS.md` for the full `docker exec` workflow.
+
 ## Agent Workflow
 
 The agent runs **on the host** and communicates with the container via `docker exec`.
@@ -27,11 +37,11 @@ The agent runs **on the host** and communicates with the container via `docker e
 # Find the running container name
 docker ps
 
-# Run an R script inside the container
-docker exec -i <container-name> Rscript analysis/analysis1/scripts/main.R
+# Run an R script inside the container (run from the repo root — renv is managed there)
+docker exec -w /workspaces/<repo-name> <container-name> Rscript analysis/main/scripts/run_all.R
 
 # Run a one-liner
-docker exec -i <container-name> Rscript -e "sessionInfo()"
+docker exec -w /workspaces/<repo-name> <container-name> Rscript -e "sessionInfo()"
 ```
 
 Drop your data in `data/`, open your agent, and hand off the analysis request.

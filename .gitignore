@@ -8,6 +8,10 @@
 renv/library/
 renv/staging/
 
+# OS / editor artifacts
+.DS_Store
+.vscode/
+
 # Local data/results (binary or reproducible from scripts)
 data/*
 analysis/*/data/

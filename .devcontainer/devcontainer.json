@@ -1,6 +1,10 @@
 {
   "name": "R (rocker/r-ver base)",
-  "image": "ghcr.io/rocker-org/devcontainer/tidyverse:4",
+  // Pin to a minor tag that matches the R version in renv.lock.
+  // The floating `:4` tag advances to newer minors (e.g. 4.6), and some CRAN
+  // packages fail to build from source against a newer R's internal API.
+  // Bump this together with renv.lock when upgrading R.
+  "image": "ghcr.io/rocker-org/devcontainer/tidyverse:4.5",
   "features": {
     "ghcr.io/rocker-org/devcontainer-features/renv-cache:0": {},
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {}
