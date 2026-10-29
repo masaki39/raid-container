@@ -1,6 +1,13 @@
 # RAID Container (R × AI × Dev Container)
 
-Reproducible R analysis workspace powered by Dev Containers. An AI agent running on the host drives the container via `docker exec`.
+Reproducible R analysis workspace powered by Dev Containers. An AI agent running on the host drives R inside the container, while packages are pinned with renv.
+
+- **Image**: `ghcr.io/rocker-org/devcontainer/tidyverse:4.6` (R 4.6, linux/amd64)
+- **Packages**: isolated by renv and pinned in `renv.lock`; restored automatically when the container is created
+- **Layout**: a ready-to-run pipeline skeleton in `analysis/main/` and `data/{raw,processed}/`
+- **CI**: GitHub Actions builds the dev container, checks `renv.lock`, and runs the pipeline (weekly too)
+
+Agent-facing instructions (commands, package workflow, layout rules) live in [`AGENTS.md`](AGENTS.md). `CLAUDE.md` is a symlink to it.
 
 ## What You Need
 
@@ -9,54 +16,33 @@ Reproducible R analysis workspace powered by Dev Containers. An AI agent running
 3. **Git**
 4. An AI agent on the host — Claude Code, Codex CLI, etc.
 
-## Launch
+## Use as a Template
 
-1. **Clone and open** the repo.
-   ```zsh
-   git clone https://github.com/masaki39/raid-container
-   code raid-container
-   ```
-2. **Reopen in Container** when VS Code prompts you; wait for the Rocker image to boot.
-   - If the prompt does not appear, run `Dev Containers: Rebuild Container` manually.
+1. Click **Use this template** on GitHub (or clone and point `origin` at your own repository).
+2. Open it in VS Code and **Reopen in Container**, or run `devcontainer up --workspace-folder .` (e.g. macOS + Colima). Packages in `renv.lock` are restored on creation.
+3. Put source data in `data/raw/`, open your agent, and hand off the analysis request.
 
-### Without VS Code (e.g. macOS + Colima)
+When upgrading R, bump the image tag in `.devcontainer/devcontainer.json` and re-snapshot `renv.lock` inside the new container in the same commit. CI fails if their R versions disagree.
 
-```zsh
-colima start                          # start the Docker daemon
-devcontainer up --workspace-folder .  # build / start the container
-```
+## Running R from the Host
 
-Then restore packages once: `docker exec -w /workspaces/<repo-name> <containerId> Rscript -e 'renv::restore(prompt = FALSE)'`.
-See `AGENTS.md` for the full `docker exec` workflow.
-
-## Agent Workflow
-
-The agent runs **on the host** and communicates with the container via `docker exec`.
+`bin/r` runs `Rscript` inside this repo's dev container, from the repo root:
 
 ```zsh
-# Find the running container name
-docker ps
-
-# Run an R script inside the container (run from the repo root — renv is managed there)
-docker exec -w /workspaces/<repo-name> <container-name> Rscript analysis/main/scripts/run_all.R
-
-# Run a one-liner
-docker exec -w /workspaces/<repo-name> <container-name> Rscript -e "sessionInfo()"
+bin/r analysis/main/scripts/run_all.R
+bin/r -e 'renv::status()'
 ```
 
-Drop your data in `data/`, open your agent, and hand off the analysis request.
+See [`AGENTS.md`](AGENTS.md) for details.
 
 ## System Dependencies
 
-To install additional system packages, add them to `.devcontainer/devcontainer.json`:
+R packages are managed by renv. For system libraries that source builds need, fill in the `apt-packages` feature in `.devcontainer/devcontainer.json`:
 
-```json
+```jsonc
 "features": {
-    "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
-        "packages": [
-            "r-cran-kableextra",
-            "libxml2-dev"
-        ]
-    }
-},
+  "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {
+    "packages": "libxml2-dev,fonts-noto-cjk"
+  }
+}
 ```
