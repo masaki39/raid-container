@@ -1,12 +1,18 @@
 {
-  "name": "R (rocker/r-ver base)",
+  "name": "R (rocker/tidyverse 4.6)",
   // Pin to a minor tag that matches the R version in renv.lock.
-  // The floating `:4` tag advances to newer minors (e.g. 4.6), and some CRAN
+  // The floating `:4` tag advances to newer minors (e.g. 4.7), and some CRAN
   // packages fail to build from source against a newer R's internal API.
   // Bump this together with renv.lock when upgrading R.
-  "image": "ghcr.io/rocker-org/devcontainer/tidyverse:4.5",
+  // This image is published for linux/amd64 only (emulated on Apple Silicon).
+  "image": "ghcr.io/rocker-org/devcontainer/tidyverse:4.6",
+  // Explicit so that host-side tooling (bin/r, AGENTS.md) can rely on
+  // /workspaces/<repo-name> as the repo root inside the container.
+  "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
   "features": {
     "ghcr.io/rocker-org/devcontainer-features/renv-cache:0": {},
+    // System libraries only (e.g. "libxml2-dev"); R packages go through renv.
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {}
-  }
+  },
+  "postCreateCommand": "Rscript -e 'renv::restore(prompt = FALSE)'"
 }
