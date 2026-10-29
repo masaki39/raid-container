@@ -1,0 +1,29 @@
+#!/bin/sh
+# Run Rscript inside this repo's dev container, from the repo root.
+#
+#   bin/r analysis/main/scripts/run_all.R
+#   bin/r -e 'renv::status()'
+#
+# Run it from the repo root on the host. The container is the one started by
+# `devcontainer up --workspace-folder .` (or VS Code) for this folder.
+# RAID_USER overrides the user R runs as (default: rstudio, the remoteUser).
+set -eu
+
+if [ ! -f .devcontainer/devcontainer.json ] || [ ! -f renv.lock ]; then
+  echo "bin/r: run this from the repo root (no .devcontainer/devcontainer.json or renv.lock in $PWD)" >&2
+  exit 1
+fi
+
+cid=$(docker ps -q --filter "label=devcontainer.local_folder=$PWD")
+if [ -z "$cid" ]; then
+  echo "bin/r: no running dev container for $PWD" >&2
+  echo "       start it with: devcontainer up --workspace-folder ." >&2
+  exit 1
+fi
+if [ "$(printf '%s\n' "$cid" | wc -l)" -gt 1 ]; then
+  echo "bin/r: more than one running container for $PWD:" >&2
+  printf '%s\n' "$cid" >&2
+  exit 1
+fi
+
+exec docker exec -u "${RAID_USER:-rstudio}" -w "/workspaces/$(basename "$PWD")" "$cid" Rscript "$@"
