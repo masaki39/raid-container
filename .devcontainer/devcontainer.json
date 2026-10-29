@@ -14,5 +14,8 @@
     // System libraries only (e.g. "libxml2-dev"); R packages go through renv.
     "ghcr.io/rocker-org/devcontainer-features/apt-packages:1": {}
   },
-  "postCreateCommand": "Rscript -e 'renv::restore(prompt = FALSE)'"
+  // On Linux hosts (and CI) the remoteUser's UID is remapped to the host UID,
+  // but the shared renv cache volume keeps the image's owner (1000), so renv
+  // cannot write to it. Take ownership first when that happens.
+  "postCreateCommand": "test -w /renv/cache || sudo chown -R \"$(id -u):$(id -g)\" /renv/cache; Rscript -e 'renv::restore(prompt = FALSE)'"
 }
