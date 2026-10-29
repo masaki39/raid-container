@@ -1,0 +1,11 @@
+version: 2
+updates:
+  # devcontainer.json features (the image tag is bumped by hand together with renv.lock)
+  - package-ecosystem: devcontainers
+    directory: /
+    schedule:
+      interval: weekly
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly

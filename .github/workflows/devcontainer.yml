@@ -1,0 +1,31 @@
+name: devcontainer
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  schedule:
+    # Weekly, to catch breakage from upstream image updates.
+    - cron: "0 3 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    # x64 runner: the rocker tidyverse image is published for linux/amd64 only.
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Build dev container and run the pipeline
+        uses: devcontainers/ci@v0.3
+        with:
+          push: never
+          runCmd: |
+            set -e
+            Rscript -e 'renv::restore(prompt = FALSE)'
+            Rscript -e 'lock <- renv::lockfile_read("renv.lock")$R$Version; here <- as.character(getRversion()); if (lock != here) stop("renv.lock R ", lock, " != image R ", here)'
+            Rscript -e 'stopifnot(renv::status()$synchronized)'
+            Rscript analysis/main/scripts/run_all.R
