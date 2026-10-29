@@ -17,7 +17,8 @@ if (!file.exists("renv.lock") || !dir.exists(file.path("analysis", "main"))) {
 }
 
 # Paths, relative to the repo root. When copying this directory to
-# analysis/<name>/, update ANALYSIS_DIR.
+# analysis/<name>/, update ANALYSIS_DIR, the paths in run_all.R, and the
+# source() line at the top of each step.
 ANALYSIS_DIR <- file.path("analysis", "main")
 
 path_raw       <- function(...) file.path("data", "raw", ...)

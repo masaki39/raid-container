@@ -14,16 +14,34 @@ if [ ! -f .devcontainer/devcontainer.json ] || [ ! -f renv.lock ]; then
   exit 1
 fi
 
-cid=$(docker ps -q --filter "label=devcontainer.local_folder=$PWD")
+if ! command -v docker >/dev/null 2>&1; then
+  echo "bin/r: docker not found on PATH (install Docker Desktop, Colima, etc.)" >&2
+  exit 1
+fi
+if ! docker info >/dev/null 2>&1; then
+  echo "bin/r: cannot reach the Docker daemon (start it, e.g. 'colima start')" >&2
+  exit 1
+fi
+
+# devcontainer labels the container with the folder it was started from.
+# Match the physical path first (symlinked cd, /tmp -> /private/tmp, ...),
+# then the logical one in case the container was started through the symlink.
+folder=$(pwd -P)
+cid=$(docker ps -q --filter "label=devcontainer.local_folder=$folder")
+if [ -z "$cid" ] && [ "$PWD" != "$folder" ]; then
+  folder=$PWD
+  cid=$(docker ps -q --filter "label=devcontainer.local_folder=$folder")
+fi
 if [ -z "$cid" ]; then
-  echo "bin/r: no running dev container for $PWD" >&2
+  echo "bin/r: no running dev container for $(pwd -P)" >&2
   echo "       start it with: devcontainer up --workspace-folder ." >&2
   exit 1
 fi
 if [ "$(printf '%s\n' "$cid" | wc -l)" -gt 1 ]; then
-  echo "bin/r: more than one running container for $PWD:" >&2
+  echo "bin/r: more than one running container for $folder:" >&2
   printf '%s\n' "$cid" >&2
   exit 1
 fi
 
-exec docker exec -u "${RAID_USER:-rstudio}" -w "/workspaces/$(basename "$PWD")" "$cid" Rscript "$@"
+# workspaceFolder is /workspaces/${localWorkspaceFolderBasename} of that folder.
+exec docker exec -u "${RAID_USER:-rstudio}" -w "/workspaces/$(basename "$folder")" "$cid" Rscript "$@"

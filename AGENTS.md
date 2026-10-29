@@ -89,7 +89,7 @@ data/
 - `analysis/main/` holds the settled pipeline. Promote code here once it is confirmed in an exploratory directory.
 - Give each analysis directory its own `README.md` and number the scripts so the run order is explicit. `run_all.R` sources `00_utils.R` and then every `NN_*.R` step in order; it succeeds even when there are no steps yet.
 - Start each step with `source(file.path("analysis", "main", "scripts", "00_utils.R"))` so it can also run on its own. `00_utils.R` checks that R runs from the repo root, provides `path_raw()`, `path_processed()`, `path_tables()`, `path_figures()` and `save_plot()`, and creates the output directories.
-- For a new exploratory analysis, copy `analysis/main/` to `analysis/<name>/` and update `ANALYSIS_DIR` in its `00_utils.R` and the paths in its `run_all.R`.
+- For a new exploratory analysis, copy `analysis/main/` to `analysis/<name>/` and replace `analysis/main` (`"analysis", "main"`) with the new directory in `ANALYSIS_DIR` and the header comment of its `00_utils.R`, the paths in its `run_all.R`, and the `source(...00_utils.R)` line at the top of each step.
 - Only `.gitkeep` files are tracked under `data/`; raw data stays local and is shared outside git.
 
 # Execution Tips
