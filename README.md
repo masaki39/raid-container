@@ -1,3 +1,7 @@
+<p align="center">
+  <img src=".github/assets/banner.svg" alt="RAID Container: R × AI × Dev Container" width="100%">
+</p>
+
 # RAID Container (R × AI × Dev Container)
 
 Reproducible R analysis workspace powered by Dev Containers. An AI agent running on the host drives R inside the container, while packages are pinned with renv.
