@@ -60,7 +60,7 @@ bin/r -e 'renv::status()'
 
 - `snapshot.type` is `implicit`: `renv::snapshot()` records only packages referenced in the project's R code (`library()`, `pkg::`, `requireNamespace()`, …). A package that is installed but not yet used in any script is **not** recorded, so write the code first, then snapshot. Conversely, `renv::status()` flags packages that scripts use but the library lacks.
 - Binary packages come from Posit Package Manager (`p3m.dev`), so most installs are quick. Add system libraries needed by source builds (e.g. `libxml2-dev`) to the `apt-packages` feature in `.devcontainer/devcontainer.json`; never install R packages through apt.
-- When upgrading R, bump the image tag in `devcontainer.json` and re-snapshot `renv.lock` in the new container together. CI fails if the R version in `renv.lock` differs from the image's R.
+- When upgrading R, bump the image tag in `devcontainer.json` and re-snapshot `renv.lock` in the new container together. CI fails if the R major.minor version in `renv.lock` differs from the image's R (patch differences such as 4.6.1 vs 4.6.2 are allowed, since the image tag is pinned to a minor).
 
 # Execution Rules
 

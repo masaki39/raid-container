@@ -26,6 +26,7 @@ jobs:
           runCmd: |
             set -e
             Rscript -e 'renv::restore(prompt = FALSE)'
-            Rscript -e 'lock <- renv::lockfile_read("renv.lock")$R$Version; here <- as.character(getRversion()); if (lock != here) stop("renv.lock R ", lock, " != image R ", here)'
+            # Compare major.minor only: the image tag is pinned to a minor (e.g. 4.6) and picks up patch releases.
+            Rscript -e 'lock <- renv::lockfile_read("renv.lock")$R$Version; here <- as.character(getRversion()); mm <- function(v) paste(unlist(numeric_version(v))[1:2], collapse = "."); if (mm(lock) != mm(here)) stop("renv.lock R ", lock, " != image R ", here, " (major.minor)")'
             Rscript -e 'stopifnot(renv::status()$synchronized)'
             Rscript analysis/main/scripts/run_all.R
