@@ -26,7 +26,7 @@ Agent-facing instructions (commands, package workflow, layout rules) live in [`A
 2. Open it in VS Code and **Reopen in Container**, or run `devcontainer up --workspace-folder .` (e.g. macOS + Colima). Packages in `renv.lock` are restored on creation.
 3. Put source data in `data/raw/`, open your agent, and hand off the analysis request.
 
-When upgrading R, bump the image tag in `.devcontainer/devcontainer.json` and re-snapshot `renv.lock` inside the new container in the same commit. CI fails if their R versions disagree.
+When upgrading R, bump the image tag in `.devcontainer/devcontainer.json` and re-snapshot `renv.lock` inside the new container in the same commit. CI fails if their R major.minor versions disagree (patch releases picked up by the minor tag are allowed).
 
 ## Running R from the Host
 
